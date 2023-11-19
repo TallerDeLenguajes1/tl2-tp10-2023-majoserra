@@ -1,0 +1,26 @@
+@using EspacioTablero
+@model List<Usuario>
+
+
+    <table>
+        <thead>
+            <tr>
+                <td hidden>ID</td>
+                <td>Nombre</td>
+                <td></td> <!-- modificar -->
+                <td></td> <!-- Eliminar -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var usuario in Model){
+                <tr>
+                    <td hidden>@usuario.Id</td>
+                    <td>@usuario.NombreDeUsuario</td>
+                    <td><a asp-controller="Usuario" asp-action="ModificarUsuario" asp-route-id="@usuario.Id">Modificar</a></td> <!-- modificar -->
+                    <td><a asp-controller="Usuario" asp-action="EliminarUsuario" asp-route-id="@usuario.Id">Eliminar</a></td> <!-- Eliminar -->
+                </tr>
+            }
+        </tbody>
+        
+        
+    </table>
