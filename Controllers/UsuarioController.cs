@@ -44,8 +44,14 @@ public class UsuarioController : Controller
         return View(manejoUsuario.GetById(id));
     }
     [HttpPost]
-    public IActionResult ModificarUsuario(int id, string Nombre){
-        manejoUsuario.Update(id, Nombre);
+    public IActionResult ModificarUsuario(int id, string NombreDeUsuario){
+        manejoUsuario.Update(id, NombreDeUsuario);
+        return RedirectToAction("ListarUsuario");
+    }
+
+    // Eliminar Usuario REALIZAR UN MEJOR CONTROL
+    public IActionResult EliminarUsuario(int id){
+        manejoUsuario.Remove(id);
         return RedirectToAction("ListarUsuario");
     }
 

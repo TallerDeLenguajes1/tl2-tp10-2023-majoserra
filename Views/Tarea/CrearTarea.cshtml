@@ -1,0 +1,29 @@
+@using EspacioTablero
+@model Tarea
+
+<form asp-controller="Tarea" asp-action="CrearTarea">
+    @* <div class="form-group">
+        <label asp-for="@Model.Id_tablero"></label>
+        <input asp-for="@Model.Id_tablero" class="form-control"/>
+    </div> *@
+
+    <div class="form-group">
+        <label asp-for="@Model.Nombre"></label>
+        <input asp-for="@Model.Nombre" class="form-control"/>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="@Model.Estado"></label>
+        <input asp-for="@Model.Estado" class="form-control"/>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Descripcion"></label>
+        <input asp-for="@Model.Descripcion" class="form-control"/>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Color"></label>
+        <input asp-for="@Model.Color" class="form-control"/>
+    </div>
+    <button type="submit" class="btn btn-primary">Enviar</button> 
+
+</form>

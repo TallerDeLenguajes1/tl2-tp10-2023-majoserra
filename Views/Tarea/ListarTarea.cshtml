@@ -1,0 +1,27 @@
+@using EspacioTablero
+@model List<Tarea>
+
+<table>
+    <thead>
+        <tr>
+            <td hidden>Id</td>
+            <td hidden>IdTablero</td>
+            <td>Nombre</td>
+            <td>Descripcion</td>
+            <td>Color</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tarea in Model){
+            <tr>
+                <td hidden>@tarea.Id</td>
+                <td hidden>@tarea.Id_tablero</td>
+                <td>@tarea.Nombre</td>
+                <td>@tarea.Descripcion</td>
+                <td>@tarea.Color</td>
+                <td><a asp-controller="Tarea" asp-action="ModificarTarea" asp-route-id="@tarea.Id">Modificar</a></td>
+                <td><a asp-controller="Tarea" asp-action="EliminarTarea" asp-route-id="@tarea.Id">Eliminar</a></td>
+            </tr>
+        }   
+    </tbody>
+</table>

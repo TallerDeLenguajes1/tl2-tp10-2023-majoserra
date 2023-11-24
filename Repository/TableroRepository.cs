@@ -29,13 +29,24 @@ namespace EspacioRepositorios
 
         public void Update(int id, Tablero tablero)
         {
-            SQLiteConnection connection = new SQLiteConnection(cadenaConexion);
-            SQLiteCommand command = connection.CreateCommand();
-            // No usar así usar, el AddParameter
-            command.CommandText = $"UPDATE Tablero SET id_usuario_propietario = '{tablero.Id_usuario_propetario}', nombre = '{tablero.Nombre}', descripcion = '{tablero.Descripcion}' WHERE id = '{tablero.Id}';";
-            connection.Open();
-            command.ExecuteNonQuery();
-            connection.Close();
+            var query = $"UPDATE Tablero SET id_usuario_propietario = (@IDpropietario), nombre = (@nombreT), descripcion = (@descripcion) WHERE id = (@id);";
+            using (SQLiteConnection connection = new SQLiteConnection(cadenaConexion))
+            {
+                connection.Open();
+                var command = new SQLiteCommand(query, connection);
+
+                command.Parameters.Add(new SQLiteParameter("@IDpropietario", tablero.Id_usuario_propetario));
+
+                command.Parameters.Add(new SQLiteParameter("@nombreT", tablero.Nombre));
+
+                command.Parameters.Add(new SQLiteParameter("@descripcion", tablero.Descripcion));
+
+                command.Parameters.Add(new SQLiteParameter("@id", id));
+
+                command.ExecuteNonQuery();
+
+                connection.Close();
+            }
         }
 
         public Tablero GetById(int id)
