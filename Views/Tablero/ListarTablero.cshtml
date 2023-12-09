@@ -1,27 +1,30 @@
 @using EspacioTablero
-@model List<Tablero>
+@model MVC.ViewModel.ListarTableroViewModel
 
-<table>
-    <thead>
+<table class="table table-striped">
+    <thead class="table-dark">
         <tr>
             <td hidden>Id</td>
             <td hidden>IdTablero</td>
             <td>IdPropietario</td>
             <td>NombreTablero</td>
             <td>Descripcion</td>
+            <td></td>
+            <td></td>
         </tr>
     </thead>
     <tbody>
-        @foreach (var tablero in Model){
+        @foreach (var tablero in Model.TablerosView)
+        {
             <tr>
                 <td hidden>@tablero.Id</td>
                 <td>@tablero.Id_usuario_propetario</td>
-                <td>@tablero.Nombre</td>
+                <td>@tablero.NombreTablero</td>
                 <td>@tablero.Descripcion</td>
                 <td><a asp-controller="Tablero" asp-action="ModificarTablero" asp-route-id="@tablero.Id">Modificar</a></td>
                 <td><a asp-controller="Tablero" asp-action="EliminarTablero" asp-route-id="@tablero.Id">Eliminar</a></td>
             </tr>
         }
-        
+
     </tbody>
 </table>

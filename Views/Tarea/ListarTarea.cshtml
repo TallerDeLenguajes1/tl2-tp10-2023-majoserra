@@ -1,18 +1,21 @@
 @using EspacioTablero
-@model List<Tarea>
+@model MVC.ViewModel.ListarTareaViewModel
 
-<table>
-    <thead>
+<table class="table table-striped">
+    <thead class="table-dark">
         <tr>
             <td hidden>Id</td>
             <td hidden>IdTablero</td>
             <td>Nombre</td>
             <td>Descripcion</td>
             <td>Color</td>
+            <td></td>
+            <td></td>
         </tr>
     </thead>
     <tbody>
-        @foreach (var tarea in Model){
+        @foreach (var tarea in Model.TareasView)
+        {
             <tr>
                 <td hidden>@tarea.Id</td>
                 <td hidden>@tarea.Id_tablero</td>
@@ -22,6 +25,6 @@
                 <td><a asp-controller="Tarea" asp-action="ModificarTarea" asp-route-id="@tarea.Id">Modificar</a></td>
                 <td><a asp-controller="Tarea" asp-action="EliminarTarea" asp-route-id="@tarea.Id">Eliminar</a></td>
             </tr>
-        }   
+        }
     </tbody>
 </table>

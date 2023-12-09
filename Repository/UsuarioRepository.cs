@@ -9,7 +9,7 @@ namespace EspacioRepositorios
 
         public void Create(Usuario usu)
         {
-            var query = $"INSERT INTO Usuario (nombre_de_usuario) VALUES (@nombre_de_usuario)";
+            var query = $"INSERT INTO Usuario (nombre_de_usuario, rol, contrasenia) VALUES (@nombre_de_usuario, @rol, @contrasenia)";
 
             using (SQLiteConnection connection = new SQLiteConnection(cadenaConexion))
             {
@@ -17,6 +17,8 @@ namespace EspacioRepositorios
                 var command = new SQLiteCommand(query, connection);
 
                 command.Parameters.Add(new SQLiteParameter("@nombre_de_usuario", usu.NombreDeUsuario));
+                command.Parameters.Add(new SQLiteParameter("@rol", usu.Rol));
+                command.Parameters.Add(new SQLiteParameter("@contrasenia", usu.Contrasenia));
 
                 command.ExecuteNonQuery();
 
@@ -41,6 +43,8 @@ namespace EspacioRepositorios
                         var usuario = new Usuario();
                         usuario.Id = Convert.ToInt32(reader["id"]);
                         usuario.NombreDeUsuario = reader["nombre_de_usuario"].ToString();
+                        usuario.Contrasenia = reader["contrasenia"].ToString();
+                        usuario.Rol = (Roles)Convert.ToInt32(reader["rol"]);  
                         usuarios.Add(usuario);
                     }
                 }
@@ -51,13 +55,15 @@ namespace EspacioRepositorios
 
         //Modificar un usuario existente. (recibe un Id y un objeto Usuario)
 
-        public void Update(int id, string nombre)
+        public void Update(int id, Usuario u)
         {
             SQLiteConnection connection = new SQLiteConnection(cadenaConexion);
             SQLiteCommand command = connection.CreateCommand();
             // No usar así usar, el AddParameter
-            command.CommandText = $"UPDATE Usuario SET nombre_de_usuario = '{nombre}' WHERE id = '{id}';";
+            command.CommandText = $"UPDATE Usuario SET nombre_de_usuario = '{u.NombreDeUsuario}', contrasenia = '{u.Contrasenia}', rol = @rol   WHERE id = '{id}';";
+
             connection.Open();
+            command.Parameters.Add(new SQLiteParameter("@rol", u.Rol));
             command.ExecuteNonQuery();
             connection.Close();
         }
@@ -77,6 +83,8 @@ namespace EspacioRepositorios
                 {
                     usuario.Id = Convert.ToInt32(reader["id"]);
                     usuario.NombreDeUsuario = reader["nombre_de_usuario"].ToString();
+                    usuario.Contrasenia = reader["contrasenia"].ToString();
+                    usuario.Rol = (Roles)Convert.ToInt32(reader["rol"]);  
                 }
             }
             connection.Close();

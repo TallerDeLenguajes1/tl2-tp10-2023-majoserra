@@ -1,26 +1,30 @@
 @using EspacioTablero
-@model List<Usuario>
+@model MVC.ViewModel.ListarUsuarioViewModel  // usamos el viewmodel 
 
 
-    <table>
-        <thead>
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <td hidden>ID</td>
+            <td>Nombre</td> 
+            <td></td> <!-- modificar -->
+            <td></td> <!-- Eliminar -->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var usuario in Model.UsuariosViews) // tenemos que hacer uso de la lista que tiene listarusuariosviewmodel, llamada usuariosViews
+        {
             <tr>
-                <td hidden>ID</td>
-                <td>Nombre</td>
-                <td></td> <!-- modificar -->
-                <td></td> <!-- Eliminar -->
+                <td hidden>@usuario.Id</td>
+                <td>@usuario.NombreDeUsuario</td>
+                <td><a asp-controller="Usuario" asp-action="ModificarUsuario" asp-route-id="@usuario.Id">Modificar</a></td>
+                <!-- modificar -->
+                <td><a asp-controller="Usuario" asp-action="EliminarUsuario" asp-route-id="@usuario.Id">Eliminar</a></td>
+                <!-- Eliminar -->
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var usuario in Model){
-                <tr>
-                    <td hidden>@usuario.Id</td>
-                    <td>@usuario.NombreDeUsuario</td>
-                    <td><a asp-controller="Usuario" asp-action="ModificarUsuario" asp-route-id="@usuario.Id">Modificar</a></td> <!-- modificar -->
-                    <td><a asp-controller="Usuario" asp-action="EliminarUsuario" asp-route-id="@usuario.Id">Eliminar</a></td> <!-- Eliminar -->
-                </tr>
-            }
-        </tbody>
-        
-        
-    </table>
+        }
+    </tbody>
+
+
+</table>

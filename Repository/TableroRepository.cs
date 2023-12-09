@@ -77,7 +77,7 @@ namespace EspacioRepositorios
             List<Tablero> listatablero = new List<Tablero>();
             SQLiteCommand command = connection.CreateCommand();
             command.CommandText = "SELECT * FROM Tablero WHERE id_usuario_propietario = @idUsuario";
-            command.Parameters.Add(new SQLiteParameter("@id", idUsuario));
+            command.Parameters.Add(new SQLiteParameter("@idUsuario", idUsuario));
             connection.Open();
             using (SQLiteDataReader reader = command.ExecuteReader())
             {
