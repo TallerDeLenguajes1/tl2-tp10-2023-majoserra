@@ -14,11 +14,17 @@
                 <div class="form-group mb-3">
                     <label asp-for="@Model.NombreTablero"></label>
                     <input asp-for="@Model.NombreTablero" class="form-control"/>
+                    <span asp-validation-for="@Model.NombreTablero" class="text-danger"></span>
                 </div>
                 <div class="form-group mb-3">
                     <label asp-for="@Model.Descripcion"></label>
                     <input asp-for="@Model.Descripcion" class="form-control"/>
+                    <span asp-validation-for="@Model.Descripcion" class="text-danger"></span>
                 </div>
 
                 <button type="submit" class="btn btn-secondary">Enviar</button>    
             </form>
+        </div>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

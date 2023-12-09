@@ -1,6 +1,6 @@
 @using EspacioTablero
 @model MVC.ViewModel.ListarTableroViewModel
-
+<h2 class="text-center">Listado de Tableros</h2>
 <table class="table table-striped">
     <thead class="table-dark">
         <tr>
@@ -28,3 +28,9 @@
 
     </tbody>
 </table>
+
+<div class="form-group mb-3 text-center">
+    <div class="col-md-4 mx-auto"> <!-- Utiliza mx-auto para centrar en dispositivos medianos y grandes -->
+        <a class="btn btn-dark btn-block text-white" asp-area="" asp-controller="Tablero" asp-action="CrearTablero">Agregar Tablero</a>
+    </div>
+</div>
