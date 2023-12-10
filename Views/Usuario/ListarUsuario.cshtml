@@ -1,8 +1,7 @@
 @using EspacioTablero
 @model MVC.ViewModel.ListarUsuarioViewModel  // usamos el viewmodel 
 
-
-
+<h2 class="text-center text-muted display-8 fw-light">Listado de Usuarios</h2>
 <table class="table table-striped">
     <thead class="table-dark">
         <tr>
@@ -25,6 +24,9 @@
             </tr>
         }
     </tbody>
-
-
 </table>
+<div class="form-group mb-3 text-center">
+    <div class="col-md-4 mx-auto"> <!-- Utiliza mx-auto para centrar en dispositivos medianos y grandes -->
+        <a class="btn btn-dark btn-block text-white" asp-area="" asp-controller="Usuario" asp-action="CrearUsuario">Agregar Usuario</a>
+    </div>
+</div>
