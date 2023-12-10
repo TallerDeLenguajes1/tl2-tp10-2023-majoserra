@@ -22,11 +22,16 @@ public class UsuarioController : Controller
 
     [HttpGet]
     public IActionResult CrearUsuario(){ // consultar si es necesario este doble control 
-        if (!IsLogin()) return RedirectToRoute (new { Controller = "Login", action = "Index"});
-        if(IsAdmin()){
-            return View(new CrearUsuarioViewModel()); // hacemos uso de la viewmodel 
-        }else{
-            return RedirectToAction("Error");
+        
+        try
+        {
+            if(IsAdmin()){
+                return View(new CrearUsuarioViewModel()); // hacemos uso de la viewmodel 
+            }
+            return RedirectToRoute (new { Controller = "Login", action = "Index"});
+        }catch (Exception ex){
+            _logger.LogError(ex.ToString());
+            return RedirectToAction("Error"); // enviamos a  error 
         }
     }
 
@@ -34,38 +39,47 @@ public class UsuarioController : Controller
 
     public IActionResult CrearUsuario(CrearUsuarioViewModel usuario){ // usamos la view model 
         
-        if(!ModelState.IsValid) return RedirectToAction("CrearUsuario");
-        if (IsAdmin())
+        try
         {
-            var nuevo = new Usuario(){ // creamos un usuario usando la viewmodel 
-                NombreDeUsuario = usuario.NombreDeUsuario,
-                Contrasenia = usuario.Contrasenia,
-                Rol = usuario.Rol
-            };
-            manejoUsuario.Create(nuevo); // le mandamos el nuevo usuario
-            return RedirectToAction("ListarUsuario"); // podemos ver los usuarios 
-        }else
-        {
-            return RedirectToAction("Error"); // si no soy admin mostramos el error, ya que no vamos a poder crear usuarios :(
+            if(!ModelState.IsValid) return RedirectToAction("CrearUsuario"); //si por alguna razon el modelo no es valido lo mandamos al formulario de nuevo 
+            if (IsAdmin())
+            {
+                var nuevo = new Usuario(){ // creamos un usuario usando la viewmodel 
+                    NombreDeUsuario = usuario.NombreDeUsuario,
+                    Contrasenia = usuario.Contrasenia,
+                    Rol = usuario.Rol
+                };
+                manejoUsuario.Create(nuevo); // le mandamos el nuevo usuario
+                return RedirectToAction("ListarUsuario"); // podemos ver los usuarios 
+            }
+            return RedirectToRoute (new { Controller = "Login", action = "Index"}); // lo mandamos al login 
+
+        }catch (Exception ex){
+            _logger.LogError(ex.ToString());
+            return RedirectToAction("Error");
         }
+        
     }
 
     // Listar Usuario
     [HttpGet]
     public IActionResult ListarUsuario(){
 
-        if (!IsLogin()) return RedirectToRoute(new { controller = "Login", action = "Index"}); // si no esta logueado lo llevamos a login
-        
-        if (IsAdmin())
+        try
         {
-            List<Usuario> listaUsuario = manejoUsuario.GetAll(); // obtenemos la lista de usuarios
-            var listadoView = new ListarUsuarioViewModel(listaUsuario);  // creamos la lista de usuarios view
-            return View(listadoView); // devolvemos la vista de usuarios view 
-        }else{
+            if (!IsLogin()) return RedirectToRoute(new { controller = "Login", action = "Index"}); // si no esta logueado lo llevamos a login
+            if (IsAdmin())
+            {
+                List<Usuario> listaUsuario = manejoUsuario.GetAll(); // obtenemos la lista de usuarios
+                var listadoView = new ListarUsuarioViewModel(listaUsuario);  // creamos la lista de usuarios view
+                return View(listadoView); // devolvemos la vista de usuarios view 
+            }else{
+                return RedirectToAction("Error");
+            }
+        }catch (Exception ex){
+            _logger.LogError(ex.ToString());
             return RedirectToAction("Error");
-            
         }
-     
     }
     // [HttpGet]
 
@@ -85,32 +99,47 @@ public class UsuarioController : Controller
 
     // Modificar Usuario
     [HttpGet]
-    public IActionResult ModificarUsuario(int id)
+    public IActionResult ModificarUsuario(int id) // van los try catch aqui?
     {
         return View(new ModificarUsuarioViewModel(manejoUsuario.GetById(id)));
     }
     [HttpPost]
     public IActionResult ModificarUsuario(int id, ModificarUsuarioViewModel usuario){
-        
-        if(!IsLogin()) return RedirectToRoute( new { controller = "Login", action = "Index"});
-        if(IsAdmin()){
-            var nuevo = new Usuario(){
-                NombreDeUsuario = usuario.NombreDeUsuario,
-                Contrasenia = usuario.Contrasenia,
-                Rol = usuario.Rol
-            };
-            
-            manejoUsuario.Update(id, nuevo);
-            return RedirectToAction("ListarUsuario");
-        }else{
+        try
+        {
+            if(!ModelState.IsValid) return RedirectToAction("ModificarUsuario");
+            if(!IsLogin()) return RedirectToRoute( new { controller = "Login", action = "Index"});
+            if(IsAdmin()){
+                var nuevo = new Usuario(){
+                    NombreDeUsuario = usuario.NombreDeUsuario,
+                    Contrasenia = usuario.Contrasenia,
+                    Rol = usuario.Rol
+                };
+                
+                manejoUsuario.Update(id, nuevo);
+                return RedirectToAction("ListarUsuario");
+            }else{
+                return RedirectToAction("Error");
+            }
+        }catch (Exception ex){
+            _logger.LogError(ex.ToString());
             return RedirectToAction("Error");
         }
+        
     }
 
     // Eliminar Usuario REALIZAR UN MEJOR CONTROL
+    [HttpPost]
     public IActionResult EliminarUsuario(int id){
-        manejoUsuario.Remove(id);
-        return RedirectToAction("ListarUsuario");
+        try
+        {
+            manejoUsuario.Remove(id);
+            return RedirectToAction("ListarUsuario");
+
+        }catch (Exception ex){
+            _logger.LogError(ex.ToString());
+            return RedirectToAction("Error");
+        }  
     }
 
     private bool IsAdmin()
