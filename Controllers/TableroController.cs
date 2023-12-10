@@ -11,10 +11,10 @@ public class TableroController : Controller
     private ITableroRepository manejoTablero;
     private readonly ILogger<TableroController> _logger;
 
-    public TableroController(ILogger<TableroController> logger)
+    public TableroController(ILogger<TableroController> logger,ITableroRepository manejoTablero)
     {
         _logger = logger;
-        manejoTablero = new TableroRepository();
+        this.manejoTablero = manejoTablero;
     }
 
 
@@ -32,18 +32,18 @@ public class TableroController : Controller
     public IActionResult CrearTablero(CrearTableroViewModel t){
 
         if(!IsLogin()) return RedirectToRoute(new { Controller = "Login", Action = "Index"});
-        if(IsLogin()){
-            var tablero = new Tablero(){
-                Id_usuario_propetario = t.Id_usuario_propetario,
-                Nombre = t.NombreTablero,
-                Descripcion = t.Descripcion
-            };
-            manejoTablero.CrearTablero(tablero);
-            return RedirectToAction("ListarTablero");
-        }else{
-            return RedirectToAction("ListarTablero");
-        }
+    
+        var id = Int32.Parse(HttpContext.Session.GetString("Id")!); // el ! saca los nulos
+            
+        var tablero = new Tablero(){
+        Id_usuario_propetario = id,
+        Nombre = t.NombreTablero,
+        Descripcion = t.Descripcion
+        };
+        manejoTablero.CrearTablero(tablero);
+        return RedirectToAction("ListarTablero");
     }
+
     [HttpGet]
     public IActionResult ListarTablero(){
 

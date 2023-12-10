@@ -13,11 +13,11 @@ public class TareaController : Controller
     private ITableroRepository _tableroRepository;
     private readonly ILogger<TareaController> _logger;
 
-    public TareaController(ILogger<TareaController> logger)
+    public TareaController(ILogger<TareaController> logger, ITableroRepository tableroRepository,ITareaRepository manejoTarea)
     {
         _logger = logger;
-        _tableroRepository = new TableroRepository();
-        manejoTarea = new TareaRepository();
+        _tableroRepository = tableroRepository;
+        this.manejoTarea = manejoTarea;
     }
 
     [HttpGet]
@@ -68,7 +68,7 @@ public class TareaController : Controller
         }
     }
     [HttpGet]
-    public IActionResult ModificarTarea(int id)
+    public IActionResult ModificarTarea(int id)  // no puedo modificar las tareas que no sean mias 
     {
         if(!IsLogin()) return RedirectToRoute(new { Controller = "Login", Action = "Index"});
         var idUsuario = Int32.Parse(HttpContext.Session.GetString("Id")!); // el id de la persona que desea crear una tarea

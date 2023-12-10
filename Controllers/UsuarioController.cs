@@ -11,10 +11,11 @@ public class UsuarioController : Controller
     private IUsuarioRepository manejoUsuario;
     private readonly ILogger<UsuarioController> _logger;
 
-    public UsuarioController(ILogger<UsuarioController> logger)
+    public UsuarioController(ILogger<UsuarioController> logger, IUsuarioRepository manejoUsuario)
     {
         _logger = logger;
-        manejoUsuario = new UsuarioRepository();
+        // Inyeccion de Dependencia
+        this.manejoUsuario = manejoUsuario;
     }
 
     // Crear usuario
@@ -32,6 +33,8 @@ public class UsuarioController : Controller
     [HttpPost]
 
     public IActionResult CrearUsuario(CrearUsuarioViewModel usuario){ // usamos la view model 
+        
+        if(!ModelState.IsValid) return RedirectToAction("CrearUsuario");
         if (IsAdmin())
         {
             var nuevo = new Usuario(){ // creamos un usuario usando la viewmodel 

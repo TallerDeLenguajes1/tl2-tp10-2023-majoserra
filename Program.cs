@@ -1,3 +1,4 @@
+using EspacioRepositorios;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -11,8 +12,15 @@ builder.Services.AddSession(options => // se agrega para las variables de sessio
     options.Cookie.IsEssential = true;
 });
 
+// Inyeccion de dependencias 
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<ITareaRepository, TareaRepository>();
+builder.Services.AddScoped<ITableroRepository, TableroRepository>();
 
+
+// Las inyecciones de dependencia tiene que ir antes de esto 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
