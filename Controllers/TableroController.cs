@@ -128,15 +128,8 @@ public class TableroController : Controller
     public IActionResult EliminarTablero(int id){
         try
         {
-            if(!IsLogin()) return RedirectToRoute (new { Controller = "Login", Action = "Index"}); // si no esta logueado lo mandamos al formulario asi se loguea 
-            if(IsAdmin()){
-                manejoTablero.Remove(id);
-                return RedirectToAction("ListarTablero");
-            }else
-            {
-                return RedirectToRoute (new { Controller = "Home", Action = "Index"});
-            }
-
+            manejoTablero.Remove(id);
+            return RedirectToAction("ListarTablero");
         }catch (Exception ex){
             _logger.LogError(ex.ToString());
             return RedirectToAction("Error"); // enviamos a  error 
