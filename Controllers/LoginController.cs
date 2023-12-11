@@ -26,21 +26,31 @@ public class LoginController : Controller
 
     [HttpPost]
     public IActionResult Login(LoginViewModel usuario){
-        List<Usuario> usuarios = manejoUsuario.GetAll(); // obtenemos la lista de usuarios
 
-        // buscamos el usuario
-        var usuarioLogeado = usuarios.FirstOrDefault(u => u.NombreDeUsuario == usuario.NombreUsuario && u.Contrasenia == usuario.Contrasenia);
-       
-        // si el usuario no existe lo devolvemos al index
-        if(usuarioLogeado == null) {
-            return RedirectToAction("Error"); // En caso de no estar logueado se muestra un mensaje de error 
-        }else{
-            // Registramos el usuario 
-            loguearUsuario(usuarioLogeado);
-            // Devolvemos el Usuario al Home
-            return RedirectToRoute(new { controller = "Tablero", action = "ListarTablero"});
+        try
+        {
+            List<Usuario> usuarios = manejoUsuario.GetAll(); // obtenemos la lista de usuario
+            // buscamos el usuario
+            var usuarioLogeado = usuarios.FirstOrDefault(u => u.NombreDeUsuario == usuario.NombreUsuario && u.Contrasenia == usuario.Contrasenia);
+            // si el usuario no existe lo devolvemos al index
+            if(usuarioLogeado == null) {
+                return RedirectToAction("Error"); // En caso de no estar logueado se muestra un mensaje de error 
+            }else{
+                //muestre por consola logueo de tipo info
+                 _logger.LogInformation("El Usuario " + usuarioLogeado.NombreDeUsuario + " Ingreso Correctamente");
+                // Registramos el usuario 
+                loguearUsuario(usuarioLogeado);
+                // Devolvemos el Usuario al Home
+                return RedirectToRoute(new { controller = "Tablero", action = "ListarTablero"});
+            }   
+        }catch(Exception ex)
+        {
+            _logger.LogError(ex.ToString());
+            //muestre por consola logueo de tipo warning 
+            _logger.LogWarning("Intento de acceso invalido - Usuario: " + usuario.NombreUsuario + " Clave ingresada: " + usuario.Contrasenia);
+            TempData["ErrorMessage"] = "Nombre de usuario o contraseña incorrectos.";
+            return RedirectToAction("Index");
         }
-
     }
 
     private void loguearUsuario(Usuario usuario)
