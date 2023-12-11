@@ -14,10 +14,10 @@ public class LoginController : Controller
     private IUsuarioRepository manejoUsuario;
     
 
-    public LoginController(ILogger<LoginController> logger)
+    public LoginController(ILogger<LoginController> logger, IUsuarioRepository manejoUsuario)
     {
         _logger = logger;
-        manejoUsuario = new UsuarioRepository();
+        this.manejoUsuario = manejoUsuario;
     }
 
     public IActionResult Index(){

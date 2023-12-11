@@ -101,7 +101,20 @@ public class UsuarioController : Controller
     [HttpGet]
     public IActionResult ModificarUsuario(int id) // van los try catch aqui?
     {
-        return View(new ModificarUsuarioViewModel(manejoUsuario.GetById(id)));
+        try
+        {
+            if(!IsLogin()) return RedirectToRoute( new { controller = "Login", action = "Index"});
+            if(IsAdmin()){
+                return View(new ModificarUsuarioViewModel(manejoUsuario.GetById(id)));
+            }else{
+                return RedirectToRoute( new { controller = "Home", action = "Index"});
+            }
+        }catch (Exception ex){
+            _logger.LogError(ex.ToString());
+            return RedirectToAction("Error");
+        }
+        
+        
     }
     [HttpPost]
     public IActionResult ModificarUsuario(int id, ModificarUsuarioViewModel usuario){
@@ -129,17 +142,23 @@ public class UsuarioController : Controller
     }
 
     // Eliminar Usuario REALIZAR UN MEJOR CONTROL
-    [HttpPost]
+    // NO AÑADIR EL HTTPPOST (consultar porque no funciona con el)
     public IActionResult EliminarUsuario(int id){
         try
         {
-            manejoUsuario.Remove(id);
-            return RedirectToAction("ListarUsuario");
-
+            if(!IsLogin()) return RedirectToRoute( new { controller = "Login", action = "Index"});
+            if (IsAdmin())
+            {
+                manejoUsuario.Remove(id);
+                return RedirectToAction("ListarUsuario");
+            }else
+            {
+                return RedirectToAction("Error");
+            } 
         }catch (Exception ex){
             _logger.LogError(ex.ToString());
             return RedirectToAction("Error");
-        }  
+        }
     }
 
     private bool IsAdmin()

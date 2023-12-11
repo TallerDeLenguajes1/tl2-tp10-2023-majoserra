@@ -5,6 +5,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
 
+var CadenaDeConexion = builder.Configuration.GetConnectionString("SqliteConexion")!;
+builder.Services.AddSingleton<string>(CadenaDeConexion);
+
 builder.Services.AddSession(options => // se agrega para las variables de session 
 {
     options.IdleTimeout = TimeSpan.FromSeconds(120);

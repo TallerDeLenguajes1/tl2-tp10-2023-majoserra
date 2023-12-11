@@ -5,7 +5,12 @@ namespace EspacioRepositorios
 {
     class UsuarioRepository : IUsuarioRepository
     {
-        private string cadenaConexion = "Data Source=DB/kanban.db;Cache=Shared";
+        private string cadenaConexion;
+
+        public UsuarioRepository(string CadenaDeConexion)
+        {
+            cadenaConexion = CadenaDeConexion;
+        }
 
         public void Create(Usuario usu)
         {
@@ -93,10 +98,11 @@ namespace EspacioRepositorios
         }
         public void Remove(int id)
         {
+            // usar using
             SQLiteConnection connection = new SQLiteConnection(cadenaConexion);
             SQLiteCommand command = connection.CreateCommand();
-            command.CommandText = $"DELETE FROM Usuario WHERE id = @id;";
-            command.Parameters.Add(new SQLiteParameter("@id", id));
+            // usar AddParameter
+            command.CommandText = $"DELETE FROM usuario WHERE id = '{id}';";
             connection.Open();
             command.ExecuteNonQuery();
             connection.Close();
