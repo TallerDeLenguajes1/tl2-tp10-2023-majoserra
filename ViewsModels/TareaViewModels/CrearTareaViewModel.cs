@@ -15,7 +15,7 @@ public class CrearTareaViewModel{
 
     [Required(ErrorMessage = "El campo es obligatorio")]
     [StringLength(50, MinimumLength = 2, ErrorMessage = "La longitud de la cadena debe estar entre 2 y 50 caracteres")]    
-    [Display(Name = "Nombre de Usuario")] // nombre del campo
+    [Display(Name = "Nombre de Tarea")] // nombre del campo
     public string Nombre {get;set;}
     public EstadoTarea Estado {get;set;}
 
@@ -31,13 +31,17 @@ public class CrearTareaViewModel{
     [Required (ErrorMessage ="Este campo es requerido")]
     public int Id_usuario_asignado {get;set;}
 
-    public List<Tablero> tableros;
+
+    public List<Tablero> Tableros;
+    public List<Usuario> Usuarios;
     
     public CrearTareaViewModel(){}
-    public CrearTareaViewModel(Tarea t){
+    public CrearTareaViewModel(Tarea t, List<Tablero> tableros, List<Usuario> usuarios){
         Nombre = t.Nombre;
         Descripcion = t.Descripcion;
         Color = t.Color;
         Id_usuario_asignado = t.Id_usuario_asignado;
+        this.Tableros = tableros;
+        this.Usuarios = usuarios;
     }
 }

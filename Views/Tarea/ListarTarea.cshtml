@@ -24,8 +24,32 @@
                 <td>@tarea.Nombre</td>
                 <td>@tarea.Descripcion</td>
                 <td>@tarea.Color</td>
-                <td><a asp-controller="Tarea" asp-action="ModificarTarea" asp-route-id="@tarea.Id">Modificar</a></td>
-                <td><a asp-controller="Tarea" asp-action="EliminarTarea" asp-route-id="@tarea.Id">Eliminar</a></td>
+                <td><a class="btn btn-outline-primary asp-controller="Tarea" asp-action="ModificarTarea" asp-route-id="@tarea.Id">Modificar</a></td>
+                <td>
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal-@tarea.Id">
+                            Eliminar
+                        </button>
+
+                        <div class="modal fade" id="exampleModal-@tarea.Id" tabindex="-1" aria-labelledby="exampleModalLabel-@tarea.Id"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel-@tarea.Id">Eliminar Tarea</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>¿Desea eliminar la tarea @tarea.Nombre?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button"  class="btn btn-dark" data-bs-dismiss="modal">Cancelar</button>
+                                        <a class="btn  btn-outline-danger" asp-controller="Tarea" asp-action="EliminarTarea" asp-route-id="@tarea.Id">Confirmar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
             </tr>
         }
     </tbody>

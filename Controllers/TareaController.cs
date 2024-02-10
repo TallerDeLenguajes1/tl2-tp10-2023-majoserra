@@ -10,22 +10,24 @@ public class TareaController : Controller
 {
     private ITareaRepository manejoTarea;
     private ITableroRepository _tableroRepository;
+    private IUsuarioRepository _usuarioRepository;
     private readonly ILogger<TareaController> _logger;
 
-    public TareaController(ILogger<TareaController> logger, ITableroRepository tableroRepository,ITareaRepository manejoTarea)
+    public TareaController(ILogger<TareaController> logger, ITableroRepository tableroRepository,ITareaRepository manejoTarea,IUsuarioRepository usuarioRepository)
     {
         _logger = logger;
         _tableroRepository = tableroRepository;
+        _usuarioRepository = usuarioRepository;
         this.manejoTarea = manejoTarea;
     }
 
     [HttpGet]
-    public IActionResult CrearTarea()
+    public IActionResult CrearTarea() // crea una tarea 
     {
         try
         {
-            if(!IsLogin()) return RedirectToRoute(new { Controller = "Login", Action = "Index"});
-            return View(new CrearTareaViewModel());   
+            if(!IsLogin()) return RedirectToRoute(new { Controller = "Login", Action = "Index"}); // controlamos que este loggeado 
+            return View(new CrearTareaViewModel(new Tarea(), _tableroRepository.GetTodos(), _usuarioRepository.GetAll()));   
         }catch (Exception ex){
             _logger.LogError(ex.ToString());
             return RedirectToAction("Error"); // enviamos a  error 
