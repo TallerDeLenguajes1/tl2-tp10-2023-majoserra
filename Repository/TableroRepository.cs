@@ -71,7 +71,7 @@ namespace EspacioRepositorios
 
             return (tablero);
         }
-        public List<Tablero> GetTableroUsuario(int idUsuario)
+        public List<Tablero> GetTableroUsuario(int idUsuario) // obtenemos los tableros de un usuario propietario en particular 
         {
             SQLiteConnection connection = new SQLiteConnection(cadenaConexion);
             List<Tablero> listatablero = new List<Tablero>();

@@ -10,6 +10,8 @@ public class CrearTareaViewModel{
 
     [Required (ErrorMessage ="Este campo es requerido")]
     public int Id {get;set;}
+
+
     [Required (ErrorMessage ="Este campo es requerido")]
     public int Id_tablero {get;set;}
 

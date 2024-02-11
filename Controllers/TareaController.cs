@@ -27,7 +27,11 @@ public class TareaController : Controller
         try
         {
             if(!IsLogin()) return RedirectToRoute(new { Controller = "Login", Action = "Index"}); // controlamos que este loggeado 
-            return View(new CrearTareaViewModel(new Tarea(), _tableroRepository.GetTodos(), _usuarioRepository.GetAll()));   
+            
+            // mandamos la lista de mis tableros asi no se genere error alguno (?)
+            var id = Int32.Parse(HttpContext.Session.GetString("Id")!); // el id de la persona que desea crear una tarea
+
+            return View(new CrearTareaViewModel(new Tarea(), _tableroRepository.GetTableroUsuario(id), _usuarioRepository.GetAll()));   
         }catch (Exception ex){
             _logger.LogError(ex.ToString());
             return RedirectToAction("Error"); // enviamos a  error 
@@ -56,8 +60,8 @@ public class TareaController : Controller
                 Estado = t.Estado,
                 Color = t.Color
                 };
-                manejoTarea.CrearTarea(tarea);
-                return RedirectToAction("ListarTarea");
+                manejoTarea.CrearTarea(tarea); // mandamos la tarea 
+                return RedirectToAction("ListarTarea"); // redireccionamos a la lista de tareas 
             }else{
                 return RedirectToAction("Error");
             }
@@ -76,9 +80,9 @@ public class TareaController : Controller
             if(IsAdmin()){ // si es admin podre ver las tareas de todos, es decir todas las tareas
                 var tareas = new ListarTareaViewModel(manejoTarea.GetAll());
                 return View(tareas);
-            }else{
+            }else{ // si soy operador solo podre ver  mis tareas asignadas 
                 var id = Int32.Parse(HttpContext.Session.GetString("Id")!); // el ! saca los nulos
-                var tareas = new ListarTareaViewModel(manejoTarea.GetTareaMiTablero(id));
+                var tareas = new ListarTareaViewModel(manejoTarea.GetTareaUsuario(id));
                 return View(tareas);
             }
         }catch (Exception ex){

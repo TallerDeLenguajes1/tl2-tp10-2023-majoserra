@@ -10,7 +10,6 @@
                     <label asp-for="@Model.Id_tablero"></label>
                   @*  <input asp-for="@Model.Id_tablero" class="form-control"/>*@
                     <select class="form-select" asp-for="@Model.Id_tablero">
-                    <option selected value="0">Ninguno:</option>
                     @foreach(var tablero in Model.Tableros){
                         <option value="@tablero.Id">@tablero.Nombre</option>
                     }
