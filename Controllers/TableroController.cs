@@ -70,9 +70,8 @@ public class TableroController : Controller
                 return View(new ListarTableroViewModel(tableros));
             }else
             {
-                var id = Int32.Parse(HttpContext.Session.GetString("Id")!); // el ! saca los nulos
-                List<Tablero> miTableros = manejoTablero.GetTableroUsuario(id);
-                return View(new ListarTableroViewModel(miTableros));
+                return RedirectToAction("ListarTableroOperador");
+                
             } 
         }catch (Exception ex){
             _logger.LogError(ex.ToString());
@@ -81,17 +80,28 @@ public class TableroController : Controller
 
         
     }
+
+    [HttpGet]
+    public IActionResult ListarTableroOperador(){
+        if(!IsLogin()) return RedirectToRoute (new {Controller = "Login", Action = "Index"}); // si no esta logueado lo mandamos al formulario asi se loguea 
+        if(!IsAdmin()){
+        var id = Int32.Parse(HttpContext.Session.GetString("Id")!); // el ! saca los nulos
+        List<Tablero> tableros = new List<Tablero>();
+        tableros = manejoTablero.GetTodos();
+        List<Tablero> mistableros = manejoTablero.GetTableroUsuario(id);
+        return View(new ListarTableroViewModel(tableros, mistableros));
+        }else
+        {
+            return RedirectToAction("Error");
+        }
+    }
     [HttpGet]
     public IActionResult ModificarTablero(int id){
         try
         {
             if(!IsLogin()) return RedirectToRoute (new {Controller = "Login", Action = "Index"}); // si no esta logueado lo mandamos al formulario asi se loguea 
-            if(IsAdmin()){
-                return View(new ModificarTableroViewModel(manejoTablero.GetById(id)));
-            }else
-            {
-                return RedirectToAction("Error");
-            }
+            return View(new ModificarTableroViewModel(manejoTablero.GetById(id)));
+            
         }catch (Exception ex){
             _logger.LogError(ex.ToString());
             return RedirectToAction("Error"); // enviamos a  error 
@@ -117,7 +127,27 @@ public class TableroController : Controller
                 manejoTablero.Update(t.Id, t);
                 return RedirectToAction("ListarTablero");
             }else{
-                return RedirectToAction("Error");
+                var id = Int32.Parse(HttpContext.Session.GetString("Id")!); // el id de la persona que desea crear una tarea
+
+                var listado = manejoTablero.GetTableroUsuario(id);
+                var se_puede = listado.FirstOrDefault(tablero => tablero.Id_usuario_propetario == id);
+
+                if (se_puede!=null)// es porque es mi tablero
+                {
+                    var t = new Tablero(){
+                    Id = tablero.Id,
+                    Id_usuario_propetario=tablero.Id_usuario_propetario,
+                    Nombre = tablero.NombreTablero,
+                    Descripcion = tablero.Descripcion
+                    };
+
+                    manejoTablero.Update(t.Id, t);
+                    return RedirectToAction("ListarTablero");
+                }else{
+                    return RedirectToAction("Error");
+                }
+            
+                
             }
         }catch (Exception ex){
             _logger.LogError(ex.ToString());
