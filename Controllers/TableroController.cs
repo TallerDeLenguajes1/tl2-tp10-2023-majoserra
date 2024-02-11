@@ -23,11 +23,12 @@ public class TableroController : Controller
         try
         {
             if(!IsLogin()) return RedirectToRoute(new { Controller = "Login", Action = "Index"});
-            if(IsAdmin()){
+            return View(new CrearTableroViewModel()); // ya sea admin u operario puede crear tableros propios 
+            /*if(IsAdmin()){
                 return View(new CrearTableroViewModel());
             }else{
                 return RedirectToRoute(new { Controller = "Home", Action = "Index"});
-            }
+            }*/
         }catch (Exception ex){
             _logger.LogError(ex.ToString());
             return RedirectToAction("Error"); // enviamos a  error 
