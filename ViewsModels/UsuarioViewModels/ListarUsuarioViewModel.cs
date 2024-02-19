@@ -8,15 +8,27 @@ public class ListarUsuarioViewModel{
 
     private List<UsuarioView> usuariosViews;
     public List<UsuarioView> UsuariosViews { get => usuariosViews; set => usuariosViews = value; }
+    public Usuario UsuarioLogin { get => usuarioLogin; set => usuarioLogin = value; }
 
-    public ListarUsuarioViewModel(List<Usuario> usuarios){
+    private Usuario usuarioLogin;
+    
+
+    public ListarUsuarioViewModel(List<Usuario> usuarios,int id){
 
         usuariosViews = new List<UsuarioView>(); // Lista de UsuariosViews
 
         foreach (var u in usuarios)
         {
-            var usuario = new UsuarioView(u); // creamos un usuarioView es lo mismo que usuario sin la contraseña
-            usuariosViews.Add(usuario);
+            if (u.Id != 0) // no listar el usuario que tengo por defecto "Sin usuario"
+            {
+                if (u.Id == id)
+                {
+                    usuarioLogin = u;
+                }
+                var usuario = new UsuarioView(u); // creamos un usuarioView es lo mismo que usuario sin la contraseña
+                usuariosViews.Add(usuario);
+            }
+            
         }
     }
 }

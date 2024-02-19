@@ -17,12 +17,12 @@
         <span asp-validation-for="@Model.Contrasenia" class="text-danger"></span>
     </div>
     <div class="form-group mb-3">
-        <!--Consultar porque no se baja el select  -->
-        <label asp-for="@Model.Rol" class="form-label text-left text-dark">Rol</label>
-        <select asp-for="@Model.Rol" class="form-select" aria-label="Default select example" disabled>
-            <option value="Operador">Operador</option>
-            <option value="Administrador">Administrador</option>
+        <label asp-for="@Model.Rol" class="text-left"></label>
+        <select asp-for="@Model.Rol" class="form-select">
+            <option value="0">Administrador</option>
+            <option value="1">Operador</option>
         </select>
+        <span asp-validation-for="@Model.Rol" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-secondary">Enviar</button>
 </form>

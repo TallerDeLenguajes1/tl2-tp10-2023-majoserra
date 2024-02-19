@@ -74,6 +74,35 @@ namespace EspacioRepositorios
             return usuarios;
         }
 
+        // listar todos los usuarios menos el usuario logueado (para que este no se pueda borrar)
+        public List<Usuario> ListarUsuarios(int idUsuario)
+        {
+            var queryString = @"SELECT * FROM Usuario WHERE id IS NOT @idUsuario;";
+            List<Usuario> usuarios = new List<Usuario>();
+
+            using (SQLiteConnection connection = new SQLiteConnection(cadenaConexion))
+            {
+                connection.Open();
+                SQLiteCommand command = new SQLiteCommand(queryString, connection);
+                command.Parameters.Add(new SQLiteParameter("@idUsuario", idUsuario));
+
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var usuario = new Usuario(); // se crea un objeto usuario
+                        usuario.Id = Convert.ToInt32(reader["id"]); // convertimos en un int al id
+                        usuario.NombreDeUsuario = reader["nombre_de_usuario"].ToString(); // en un string al nombre
+                        usuario.Contrasenia = reader["contrasenia"].ToString(); // en un string a la contrasenia
+                        usuario.Rol = (Roles)Convert.ToInt32(reader["rol"]);   // en un int del tipo rol al rol 
+                        usuarios.Add(usuario);
+                    }
+                }
+                connection.Close();
+            }
+            return usuarios;
+        }
+
         //Modificar un usuario existente. (recibe un Id y un objeto Usuario)
 
         public void Update(int id, Usuario u)

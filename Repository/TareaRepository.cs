@@ -37,12 +37,15 @@ namespace EspacioRepositorios
                 using (SQLiteCommand command = connection.CreateCommand())
                 {
                     // Usar parámetros en lugar de concatenar valores en la cadena de consulta
-                    command.CommandText = "UPDATE Tarea SET nombre = @nombre, descripcion = @descripcion, color = @color WHERE id = @id;";
+                    command.CommandText = "UPDATE Tarea SET nombre = @nombre, descripcion = @descripcion, color = @color, estado = @estado, id_tablero = @id_tablero, id_usuario_asignado = @id_usuario_asignado WHERE id = @id;";
                     command.Parameters.Add(new SQLiteParameter("@nombre", tarea.Nombre));
                     command.Parameters.Add(new SQLiteParameter("@descripcion", tarea.Descripcion));
                     command.Parameters.Add(new SQLiteParameter("@color", tarea.Color));
+                    command.Parameters.Add(new SQLiteParameter("@estado", tarea.Estado));
                     command.Parameters.Add(new SQLiteParameter("@id", id));
-
+                    command.Parameters.Add(new SQLiteParameter("@id_tablero", tarea.Id_tablero));
+                    command.Parameters.Add(new SQLiteParameter("@id_usuario_asignado", tarea.Id_usuario_asignado));
+                    
                     command.ExecuteNonQuery();
                 }
 
@@ -117,7 +120,7 @@ namespace EspacioRepositorios
         
         }
         
-        public List<Tarea> GetTareaMiTablero(int idUsuario)
+        public List<Tarea> GetTareaMiTablero(int idUsuario) // obtengo todas las tareas de mi tablero 
         {
             var queryString = @"SELECT Tarea.id, Tarea.id_tablero, Tarea.nombre, Tarea.estado, Tarea.descripcion, Tarea.color, Tarea.id_usuario_asignado FROM Tarea INNER JOIN Tablero ON Tarea.id_tablero = Tablero.id WHERE Tablero.id_usuario_propietario = @idUsuario;";
             List<Tarea> tareas = new List<Tarea>();
@@ -149,9 +152,9 @@ namespace EspacioRepositorios
             return tareas;
         }
 
-        public List<Tarea> GetTareaUsuario(int idUsuario)
+        public List<Tarea> GetTareaAsignadas(int idUsuario) // obtiene todas las tareas donde el usuario asignado soy yo 
         {
-            var queryString = @"SELECT * FROM Tarea WHERE id_usuario_asignado = @idUsuario;";
+            var queryString = @"SELECT DISTINCT Tarea.* FROM Tarea INNER JOIN Tablero ON Tarea.id_tablero = Tablero.id WHERE Tarea.id_usuario_asignado = @idUsuario AND Tablero.id_usuario_propietario <> @idUsuario;"; // cambiar la condicion a que no me traiga las de mi tablero 
             List<Tarea> tareas = new List<Tarea>();
 
             using (SQLiteConnection connection = new SQLiteConnection(cadenaConexion))

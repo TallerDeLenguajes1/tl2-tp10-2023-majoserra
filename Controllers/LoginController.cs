@@ -5,7 +5,6 @@ using EspacioRepositorios;
 using EspacioTablero;
 using MVC.ViewModel;
 using Microsoft.AspNetCore.Session;
-
 namespace tl2_tp10_2023_majoserra.Controllers;
 
 public class LoginController : Controller

@@ -78,12 +78,30 @@ public class TareaController : Controller
         {
             if (!IsLogin()) return RedirectToRoute(new { Controller = "Login", Action = "Index"});
             if(IsAdmin()){ // si es admin podre ver las tareas de todos, es decir todas las tareas
-                var tareas = new ListarTareaViewModel(manejoTarea.GetAll());
+                var tareas = new ListarTareaViewModel(manejoTarea.GetAll(), _usuarioRepository.GetAll());
                 return View(tareas);
             }else{ // si soy operador solo podre ver  mis tareas asignadas 
+                return RedirectToAction("ListarTareaOperador");
+            }
+        }catch (Exception ex){
+            _logger.LogError(ex.ToString());
+            return RedirectToAction("Error"); // enviamos a  error 
+        }
+        
+    }
+    public IActionResult ListarTareaOperador()
+    {
+        try
+        {
+            if (!IsLogin()) return RedirectToRoute(new { Controller = "Login", Action = "Index"});
+            if(!IsAdmin()){ // si es admin podre ver las tareas de todos, es decir todas las tareas
                 var id = Int32.Parse(HttpContext.Session.GetString("Id")!); // el ! saca los nulos
-                var tareas = new ListarTareaViewModel(manejoTarea.GetTareaUsuario(id));
+                var tareas = new ListarTareaViewModel(manejoTarea.GetAll(),manejoTarea.GetTareaMiTablero(id),manejoTarea.GetTareaAsignadas(id), _usuarioRepository.GetAll());
                 return View(tareas);
+            }else{ // si soy operador solo podre ver  mis tareas asignadas 
+                
+                return RedirectToAction("Error");
+       
             }
         }catch (Exception ex){
             _logger.LogError(ex.ToString());
@@ -97,31 +115,50 @@ public class TareaController : Controller
         try
         {
            if(!IsLogin()) return RedirectToRoute(new { Controller = "Login", Action = "Index"});
-            var idUsuario = Int32.Parse(HttpContext.Session.GetString("Id")!); // el id de la persona que desea crear una tarea
-            var t = manejoTarea.GetById(id); // tarea
-            var listado = _tableroRepository.GetTodos(); // tableros     
-            var se_puede = listado.FirstOrDefault(tablero => tablero.Id == t.Id_tablero  && tablero.Id_usuario_propetario == idUsuario);
-            if (se_puede!= null)
+            if (IsAdmin())
             {
-                return View(new ModificarTareaViewModel(manejoTarea.GetById(id)));
-            }else{
-                return RedirectToAction("Error");
-            } 
+                return View(new ModificarTareaViewModel(manejoTarea.GetById(id), _usuarioRepository.GetAll()));
+            }else
+            {
+                var idUsuario = Int32.Parse(HttpContext.Session.GetString("Id")!); // el id de la persona que desea crear una tarea
+                var t = manejoTarea.GetById(id); // tarea
+                var listado = _tableroRepository.GetTodos(); // tableros     
+                var se_puede = listado.FirstOrDefault(tablero => tablero.Id == t.Id_tablero  && tablero.Id_usuario_propetario == idUsuario);
+                if (se_puede!= null)// controlar que si es mi tablero y soy operador puedo modificar cualquier cosa
+                {
+                    return View(new ModificarTareaViewModel(manejoTarea.GetById(id),_usuarioRepository.GetAll()));
+                }else{
+                    var tareaAsignadas = manejoTarea.GetTareaAsignadas(idUsuario);
+                    var esAsignada = tareaAsignadas.FirstOrDefault(tarea => tarea.Id_usuario_asignado== idUsuario);
+                
+                    if (esAsignada!=null)
+                    {
+                        return View("ModificarTareaOperador",new ModificarTareaViewModel(manejoTarea.GetById(id),_usuarioRepository.GetAll()));
+            
+                    }
+                    return RedirectToAction("Error");
+                }
+                // anadir lista desplegable para usuario y tableros 
+                }
         }catch (Exception ex){
             _logger.LogError(ex.ToString());
             return RedirectToAction("Error"); // enviamos a  error 
-        }
-        
-    }
+        } 
+    } 
     [HttpPost]
     public IActionResult ModificarTarea(int id, ModificarTareaViewModel tarea)
     {
         try
         {
+            
             var nuevo = new Tarea(){
+            Id = tarea.Id,
+            Id_tablero = tarea.Id_tablero,
+            Id_usuario_asignado = tarea.Id_usuario_asignado,
             Nombre = tarea.Nombre,
             Descripcion = tarea.Descripcion,
-            Color = tarea.Color
+            Color = tarea.Color,
+            Estado = tarea.Estado
             };
             manejoTarea.Update(id, nuevo);
             return RedirectToAction("ListarTarea");
@@ -130,7 +167,19 @@ public class TareaController : Controller
             _logger.LogError(ex.ToString());
             return RedirectToAction("Error"); // enviamos a  error 
         }
-        
+    }
+    [HttpPost]
+    public IActionResult ModificarTareaOperador(int id, ModificarTareaViewModel tarea)
+    {
+        try
+        {
+            manejoTarea.UpdateEstado(id, tarea.Estado);
+            return RedirectToAction("ListarTarea");
+            
+        }catch (Exception ex){
+            _logger.LogError(ex.ToString());
+            return RedirectToAction("Error"); // enviamos a  error 
+        }
     }
 
     public IActionResult EliminarTarea(int id)

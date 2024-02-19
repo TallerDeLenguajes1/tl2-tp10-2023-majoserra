@@ -70,18 +70,41 @@ public class UsuarioController : Controller
             if (!IsLogin()) return RedirectToRoute(new { controller = "Login", action = "Index"}); // si no esta logueado lo llevamos a login
             if (IsAdmin())
             {
+                var id = Int32.Parse(HttpContext.Session.GetString("Id")!); // el id de la persona que desea crear una tarea
                 List<Usuario> listaUsuario = manejoUsuario.GetAll(); // obtenemos la lista de usuarios
-                var listadoView = new ListarUsuarioViewModel(listaUsuario);  // creamos la lista de usuarios view
+                var listadoView = new ListarUsuarioViewModel(listaUsuario, id);  // creamos la lista de usuarios view
                 return View(listadoView); // devolvemos la vista de usuarios view 
             }else{
-                return RedirectToAction("Error");
+                return RedirectToAction("ListarUsuarioOperador");
             }
         }catch (Exception ex){
             _logger.LogError(ex.ToString());
             return RedirectToAction("Error");
         }
     }
-    // [HttpGet]
+
+    
+    [HttpGet]
+
+    public IActionResult ListarUsuarioOperador(){
+        try
+        {
+        if (!IsLogin()) return RedirectToRoute(new { controller = "Login", action = "Index"}); // si no esta logueado lo llevamos a login
+        if (!IsAdmin())
+        {
+            List<Usuario> listaUsuario = manejoUsuario.GetAll(); // obtenemos la lista de usuarios
+            var id = Int32.Parse(HttpContext.Session.GetString("Id")!); // el id de la persona que desea crear una tarea
+            var listadoView = new ListarUsuarioViewModel(listaUsuario, id);  // creamos la lista de usuarios view
+            return View(listadoView); // devolvemos la vista de usuarios view 
+        }else{
+            return RedirectToAction("Error");
+        }
+        }catch (Exception ex){
+            _logger.LogError(ex.ToString());
+            return RedirectToAction("Error");
+        }
+        
+    }
 
     // public IActionResult MostrarUsuario(){
     //     if (!IsLogin()) return RedirectToRoute(new { controller = "Login", action = "Index"}); // si no esta logueado lo llevamos a login

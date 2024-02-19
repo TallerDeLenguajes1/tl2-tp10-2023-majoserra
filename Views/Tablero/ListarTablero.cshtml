@@ -1,7 +1,7 @@
 @using EspacioTablero
 @model MVC.ViewModel.ListarTableroViewModel
  <h2 class="text-center text-muted display-8 fw-light">Listado de Tableros</h2>
-<table class="table table-striped">
+<table class="table table-striped table-hover">
     <thead class="table-dark">
         <tr>
             <td hidden>Id</td>
@@ -21,9 +21,32 @@
                 <td>@tablero.Id_usuario_propetario</td>
                 <td>@tablero.NombreTablero</td>
                 <td>@tablero.Descripcion</td>
-                <td><a asp-controller="Tablero" asp-action="ModificarTablero" asp-route-id="@tablero.Id">Modificar</a></td>
-                <td><a asp-controller="Tablero" asp-action="EliminarTablero" asp-route-id="@tablero.Id">Eliminar</a></td>
-            </tr>
+                <td><a class="btn btn-outline-dark" asp-controller="Tablero" asp-action="ModificarTablero" asp-route-id="@tablero.Id">Modificar</a></td>
+                <td>
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal-@tablero.Id">
+                            Eliminar
+                        </button>
+
+                        <div class="modal fade" id="exampleModal-@tablero.Id" tabindex="-1" aria-labelledby="exampleModalLabel-@tablero.Id"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel-@tablero.Id">Eliminar Tablero</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>¿Desea eliminar el tablero @tablero.NombreTablero?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button"  class="btn btn-dark" data-bs-dismiss="modal">Cancelar</button>
+                                        <a class="btn  btn-outline-danger" asp-controller="Tablero" asp-action="EliminarTablero" asp-route-id="@tablero.Id">Confirmar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>   </tr>
         }
 
     </tbody>

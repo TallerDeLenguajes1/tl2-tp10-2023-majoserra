@@ -13,6 +13,8 @@ public class TareaView{
     public string Color {get;set;}
     public int Id_usuario_asignado {get;set;}
 
+    public string NombreUsuario {get;set;}
+
     public TareaView(){}
 
     public TareaView(Tarea t){

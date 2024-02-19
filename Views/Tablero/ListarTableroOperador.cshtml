@@ -22,7 +22,7 @@
                 <td>@mistablero.Id_usuario_propetario</td>
                 <td>@mistablero.NombreTablero</td>
                 <td>@mistablero.Descripcion</td>
-                <td><a class="btn btn-outline-primary asp-controller="Tablero" asp-action="ModificarTablero" asp-route-id="@mistablero.Id">Modificar</a></td>
+                <td><a class="btn btn-outline-dark" asp-controller="Tablero" asp-action="ModificarTablero" asp-route-id="@mistablero.Id">Modificar</a></td>
                 <td>
                         <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal-@mistablero.Id">
                             Eliminar
@@ -80,6 +80,8 @@
         }
     </tbody>
 </table>
+
+
 
 <div class="form-group mb-3 text-center">
     <div class="col-md-4 mx-auto"> <!-- Utiliza mx-auto para centrar en dispositivos medianos y grandes -->

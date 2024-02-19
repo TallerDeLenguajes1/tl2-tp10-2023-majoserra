@@ -48,6 +48,32 @@ namespace EspacioRepositorios
                 connection.Close();
             }
         }
+        
+        public List<Tablero> GetTableroDondeTengoTareas(int idUsuario) // obtenemos los tableros de un usuario propietario en particular 
+        {
+            SQLiteConnection connection = new SQLiteConnection(cadenaConexion);
+            List<Tablero> listatablero = new List<Tablero>();
+            SQLiteCommand command = connection.CreateCommand();
+            command.CommandText = "SELECT DISTINCT Tablero.* FROM Tablero INNER JOIN Tarea ON Tablero.id = Tarea.id_tablero WHERE Tarea.id_usuario_asignado = @idUsuario AND Tablero.id_usuario_propietario <> @idUsuario;";
+            command.Parameters.Add(new SQLiteParameter("@idUsuario", idUsuario));
+            connection.Open();
+            using (SQLiteDataReader reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    var tablero = new Tablero();
+                    tablero.Id = Convert.ToInt32(reader["id"]);
+                    tablero.Id_usuario_propetario = Convert.ToInt32(reader["id_usuario_propietario"]);
+                    tablero.Nombre = reader["nombre"].ToString();
+                    tablero.Descripcion = reader["descripcion"].ToString();
+                    listatablero.Add(tablero);
+                }
+            }
+            connection.Close();
+
+            return (listatablero);
+
+        }
 
         public Tablero GetById(int id)
         {
@@ -96,6 +122,7 @@ namespace EspacioRepositorios
             return (listatablero);
 
         }
+        
         public List<Tablero> GetTodos()
         {
             SQLiteConnection connection = new SQLiteConnection(cadenaConexion);

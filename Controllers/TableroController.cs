@@ -87,7 +87,7 @@ public class TableroController : Controller
         if(!IsAdmin()){
         var id = Int32.Parse(HttpContext.Session.GetString("Id")!); // el ! saca los nulos
         List<Tablero> tableros = new List<Tablero>();
-        tableros = manejoTablero.GetTodos();
+        tableros = manejoTablero.GetTableroDondeTengoTareas(id);
         List<Tablero> mistableros = manejoTablero.GetTableroUsuario(id);
         return View(new ListarTableroViewModel(tableros, mistableros));
         }else
