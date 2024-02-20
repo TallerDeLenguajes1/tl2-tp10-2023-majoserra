@@ -9,11 +9,13 @@ namespace tl2_tp10_2023_majoserra.Controllers;
 public class TableroController : Controller
 {
     private ITableroRepository manejoTablero;
+    private IUsuarioRepository _usuarioRepository;
     private readonly ILogger<TableroController> _logger;
 
-    public TableroController(ILogger<TableroController> logger,ITableroRepository manejoTablero)
+    public TableroController(ILogger<TableroController> logger,ITableroRepository manejoTablero,IUsuarioRepository usuarioRepository)
     {
         _logger = logger;
+        _usuarioRepository = usuarioRepository;
         this.manejoTablero = manejoTablero;
     }
 
@@ -67,7 +69,7 @@ public class TableroController : Controller
             if(IsAdmin()){
                 List<Tablero> tableros = new List<Tablero>();
                 tableros = manejoTablero.GetTodos();
-                return View(new ListarTableroViewModel(tableros));
+                return View(new ListarTableroViewModel(tableros,_usuarioRepository.GetAll()));
             }else
             {
                 return RedirectToAction("ListarTableroOperador");

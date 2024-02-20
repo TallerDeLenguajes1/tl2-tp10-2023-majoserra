@@ -10,6 +10,7 @@ public class TableroView{
     public int Id_usuario_propetario;
     public string NombreTablero;
     public string Descripcion;
+    public string NombrePropietario {get;set;}
 
     public TableroView(){}
 

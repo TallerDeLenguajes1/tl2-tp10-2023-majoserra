@@ -12,13 +12,18 @@ public class ListarTableroViewModel{
 
     
 
-    public ListarTableroViewModel(List<Tablero> listado){
+    public ListarTableroViewModel(List<Tablero> listado, List<Usuario> usuarios){
         
         tablerosView = new List<TableroView>(); // inicializamos el tablero 
 
         foreach (var t in listado)
         {
             var tablero = new TableroView(t); // creamos un tablero view
+            var usuario = usuarios.FirstOrDefault(u => u.Id == tablero.Id_usuario_propetario);
+            if (usuario != null)
+            {
+                tablero.NombrePropietario = usuario.NombreDeUsuario;
+            }
             TablerosView.Add(tablero); // lo cargamos a la lista 
         }
     }
