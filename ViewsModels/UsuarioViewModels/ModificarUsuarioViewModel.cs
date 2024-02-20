@@ -5,6 +5,8 @@ using EspacioTablero;
 namespace MVC.ViewModel;
     public class ModificarUsuarioViewModel{
 
+        public int Id {get;set;}
+
         [Required(ErrorMessage = "El campo es obligatorio")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "La longitud de la cadena debe estar entre 2 y 50 caracteres")]    
         [Display(Name = "Nombre de Usuario")] // nombre del campo
@@ -25,5 +27,6 @@ namespace MVC.ViewModel;
             NombreDeUsuario = usuario.NombreDeUsuario;
             Contrasenia = usuario.Contrasenia;
             Rol = usuario.Rol;
+            Id = usuario.Id;
         }
     }

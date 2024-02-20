@@ -127,16 +127,49 @@ public class UsuarioController : Controller
         try
         {
             if(!IsLogin()) return RedirectToRoute( new { controller = "Login", action = "Index"});
-            if(IsAdmin()){
+            /*if(IsAdmin()){
                 return View(new ModificarUsuarioViewModel(manejoUsuario.GetById(id)));
             }else{
                 return RedirectToRoute( new { controller = "Home", action = "Index"});
+            }*/
+             if(IsAdmin()) {
+                var usuarioView = new ModificarUsuarioViewModel(manejoUsuario.GetById(id));
+                return View("ModificarUsuario",usuarioView);
+
+            } else if(Int32.Parse(HttpContext.Session.GetString("Id")!) == id){
+                var usuarioView = new ModificarUsuarioViewModel(manejoUsuario.GetById(id));
+                return View("ModificarUsuarioOperador",usuarioView);
             }
+            return RedirectToAction("ListarUsuario");
         }catch (Exception ex){
             _logger.LogError(ex.ToString());
             return RedirectToAction("Error");
         }
         
+        
+    }
+    [HttpPost]
+    public IActionResult ModificarUsuarioOperador(int id, ModificarUsuarioViewModel usuario){
+        try
+        {
+            
+            if(!IsLogin()) return RedirectToRoute( new { controller = "Login", action = "Index"});
+            if(!IsAdmin()){
+                var nuevo = new Usuario(){
+                    NombreDeUsuario = usuario.NombreDeUsuario,
+                    Contrasenia = usuario.Contrasenia,
+                    Rol = usuario.Rol
+                };
+                
+                manejoUsuario.Update(id, nuevo);
+                return RedirectToAction("ListarUsuario");
+            }else{
+                return RedirectToAction("Error");
+            }
+        }catch (Exception ex){
+            _logger.LogError(ex.ToString());
+            return RedirectToAction("Error");
+        }
         
     }
     [HttpPost]
