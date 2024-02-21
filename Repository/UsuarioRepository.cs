@@ -69,7 +69,7 @@ namespace EspacioRepositorios
 
             if (usuarios == null)
             {
-                throw new Exception("Lista de usuario No creada");
+                throw new Exception("Lista de usuario No Encontrada");
             }
             return usuarios;
         }
@@ -100,7 +100,12 @@ namespace EspacioRepositorios
                 }
                 connection.Close();
             }
+            if (usuarios == null)
+            {
+                throw new Exception("Lista de usuario No Encontrada");
+            }
             return usuarios;
+            
         }
 
         //Modificar un usuario existente. (recibe un Id y un objeto Usuario)
@@ -142,6 +147,7 @@ namespace EspacioRepositorios
             {
                 throw new Exception("Usuario no creado");
             }
+            
 
             return usuario;
         }

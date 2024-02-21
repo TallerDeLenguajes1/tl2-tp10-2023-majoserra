@@ -104,6 +104,9 @@ namespace EspacioRepositorios
                 }
                 connection.Close();
             }
+            if (tareas == null) {
+                throw new Exception("Lista de tareas no encontrada");
+            }
             return tareas;
         }
         
@@ -129,6 +132,9 @@ namespace EspacioRepositorios
                 }
             }
             connection.Close();
+            if (tarea == null) {
+                throw new Exception("No se encontro la tarea");
+            }
 
             return tarea;
         
@@ -195,6 +201,9 @@ namespace EspacioRepositorios
                 }
                 connection.Close();
             }
+            if (tareas == null) {
+                throw new Exception("No se encontraron tareas");
+            }
             return tareas;
         }
         public List<Tarea> GetTareaTablero(int idTablero)
@@ -226,6 +235,9 @@ namespace EspacioRepositorios
                     }
                 }
                 connection.Close();
+            }
+            if (tareas == null) {
+                throw new Exception("No se encontro las tareas");
             }
             return tareas;
         }

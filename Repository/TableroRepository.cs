@@ -70,6 +70,9 @@ namespace EspacioRepositorios
                 }
             }
             connection.Close();
+            if (listatablero == null) {
+                throw new Exception("Tableros no encontrados");
+            }
 
             return (listatablero);
 
@@ -94,6 +97,9 @@ namespace EspacioRepositorios
                 }
             }
             connection.Close();
+            if (tablero == null) {
+                throw new Exception("Tablero no encontrado");
+            }
 
             return (tablero);
         }
@@ -118,6 +124,9 @@ namespace EspacioRepositorios
                 }
             }
             connection.Close();
+            if (listatablero == null) {
+                throw new Exception("Tableros no encontrados");
+            }
 
             return (listatablero);
 
@@ -143,6 +152,9 @@ namespace EspacioRepositorios
                 }
             }
             connection.Close();
+            if (listatablero == null) {
+                throw new Exception("Tableros no encontrados");
+            }
 
             return (listatablero);
         }
