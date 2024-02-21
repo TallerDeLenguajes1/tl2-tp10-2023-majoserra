@@ -158,6 +158,18 @@ namespace EspacioRepositorios
             command.ExecuteNonQuery();
             connection.Close();
         }
+        public void RemoveTableroUsuario(int idUsuario)
+        {
+            // usar using
+            SQLiteConnection connection = new SQLiteConnection(cadenaConexion);
+            SQLiteCommand command = connection.CreateCommand();
+            // usar AddParameter
+            command.CommandText = $"DELETE FROM tablero WHERE id_usuario_propietario = '{idUsuario}';";
+            connection.Open();
+            command.ExecuteNonQuery();
+            connection.Close();
+        }
+
 
     }
 }

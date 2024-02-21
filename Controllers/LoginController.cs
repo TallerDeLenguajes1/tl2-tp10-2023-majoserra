@@ -33,7 +33,7 @@ public class LoginController : Controller
             var usuarioLogeado = usuarios.FirstOrDefault(u => u.NombreDeUsuario == usuario.NombreUsuario && u.Contrasenia == usuario.Contrasenia);
             // si el usuario no existe lo devolvemos al index
             if(usuarioLogeado == null) {
-                return RedirectToAction("Error"); // En caso de no estar logueado se muestra un mensaje de error 
+                return RedirectToAction("Index"); // En caso de no estar logueado se muestra un mensaje de error 
             }else{
                 //muestre por consola logueo de tipo info
                  _logger.LogInformation("El Usuario " + usuarioLogeado.NombreDeUsuario + " Ingreso Correctamente");

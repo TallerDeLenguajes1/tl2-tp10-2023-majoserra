@@ -9,13 +9,17 @@ namespace tl2_tp10_2023_majoserra.Controllers;
 public class UsuarioController : Controller
 {
     private IUsuarioRepository manejoUsuario;
+    private ITableroRepository _tableroRepository;
+    private ITareaRepository _tareaRepository;
     private readonly ILogger<UsuarioController> _logger;
 
-    public UsuarioController(ILogger<UsuarioController> logger, IUsuarioRepository manejoUsuario)
+    public UsuarioController(ILogger<UsuarioController> logger, IUsuarioRepository manejoUsuario, ITableroRepository tableroRepository,ITareaRepository tareaRepository)
     {
         _logger = logger;
         // Inyeccion de Dependencia
         this.manejoUsuario = manejoUsuario;
+        _tableroRepository = tableroRepository;
+        _tareaRepository = tareaRepository;
     }
 
     // Crear usuario
@@ -205,6 +209,9 @@ public class UsuarioController : Controller
             if(!IsLogin()) return RedirectToRoute( new { controller = "Login", action = "Index"});
             if (IsAdmin())
             {
+                _tareaRepository.UpdateTareaAsignada(id);
+                _tareaRepository.RemoveTareaUsuario(id);
+                _tableroRepository.RemoveTableroUsuario(id);
                 manejoUsuario.Remove(id);
                 return RedirectToAction("ListarUsuario");
             }else

@@ -10,13 +10,15 @@ public class TableroController : Controller
 {
     private ITableroRepository manejoTablero;
     private IUsuarioRepository _usuarioRepository;
+    private ITareaRepository _tareaRepository;
     private readonly ILogger<TableroController> _logger;
 
-    public TableroController(ILogger<TableroController> logger,ITableroRepository manejoTablero,IUsuarioRepository usuarioRepository)
+    public TableroController(ILogger<TableroController> logger,ITableroRepository manejoTablero,IUsuarioRepository usuarioRepository, ITareaRepository tareaRepository)
     {
         _logger = logger;
         _usuarioRepository = usuarioRepository;
         this.manejoTablero = manejoTablero;
+        _tareaRepository = tareaRepository;
     }
 
 
@@ -91,7 +93,7 @@ public class TableroController : Controller
         List<Tablero> tableros = new List<Tablero>();
         tableros = manejoTablero.GetTableroDondeTengoTareas(id);
         List<Tablero> mistableros = manejoTablero.GetTableroUsuario(id);
-        return View(new ListarTableroViewModel(tableros, mistableros));
+        return View(new ListarTableroViewModel(tableros, mistableros, _usuarioRepository.GetAll()));
         }else
         {
             return RedirectToAction("Error");
@@ -162,6 +164,7 @@ public class TableroController : Controller
         try
         {
             manejoTablero.Remove(id);
+            _tareaRepository.RemoveTareaTablero(id);
             return RedirectToAction("ListarTablero");
         }catch (Exception ex){
             _logger.LogError(ex.ToString());

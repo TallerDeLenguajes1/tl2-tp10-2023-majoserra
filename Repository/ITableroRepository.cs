@@ -9,6 +9,7 @@ namespace EspacioRepositorios
         public List<Tablero> GetTableroDondeTengoTareas(int idUsuario);
         public List<Tablero> GetTableroUsuario(int idUsuario);
         public List<Tablero> GetTodos();
+        public void RemoveTableroUsuario(int idUsuario);
         public void Remove(int id);
     }
 }

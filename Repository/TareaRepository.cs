@@ -62,6 +62,20 @@ namespace EspacioRepositorios
             command.ExecuteNonQuery();
             connection.Close();
         }
+
+        public void UpdateTareaAsignada(int idUsuario){
+            var queryString = @"UPDATE Tarea SET id_usuario_asignado = 0 WHERE id_usuario_asignado = @idUsuario;";
+
+            using (SQLiteConnection connection = new SQLiteConnection(cadenaConexion))
+            {
+                connection.Open();
+                SQLiteCommand command = new SQLiteCommand(queryString, connection);
+
+                command.Parameters.Add(new SQLiteParameter("@idUsuario", idUsuario));
+                command.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
         public List<Tarea> GetAll()
         {
             var queryString = @"SELECT * FROM Tarea;";
@@ -245,5 +259,35 @@ namespace EspacioRepositorios
             connection.Close();
         }
 
+        public void RemoveTareaTablero(int idTablero){
+
+            SQLiteConnection connection = new SQLiteConnection(cadenaConexion);
+            SQLiteCommand command = connection.CreateCommand();
+            // usar AddParameter
+            command.CommandText = $"DELETE FROM tarea WHERE id_tablero = '{idTablero}';";
+            connection.Open();
+            command.ExecuteNonQuery();
+            connection.Close();
+        
+        }
+
+        public void RemoveTareaUsuario(int idUsuario){
+
+            SQLiteConnection connection = new SQLiteConnection(cadenaConexion);
+            SQLiteCommand command = connection.CreateCommand();
+            // usar AddParameter
+            command.CommandText = $"DELETE FROM Tarea WHERE id_tablero = (SELECT id FROM Tablero WHERE id_usuario_propietario= @idUsuario);";
+            command.Parameters.AddWithValue("@idUsuario", idUsuario);
+            connection.Open();
+            command.ExecuteNonQuery();
+            connection.Close();
+
+            
+        
+        }
+
+
     }
+
+
 }
