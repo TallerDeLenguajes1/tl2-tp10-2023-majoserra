@@ -9,8 +9,8 @@ public class LoginViewModel
     public string NombreUsuario {get;set;}  
 
     [Required(ErrorMessage = "Este campo es requerido")]
-    [PasswordPropertyText] // indicamos el tipo de la contrasenia
     [Display(Name = "Contraseña")]
+    [PasswordPropertyText] // indicamos el tipo de la contrasenia
     public string Contrasenia {get;set;}
     
 }
